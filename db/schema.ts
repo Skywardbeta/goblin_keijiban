@@ -1,8 +1,7 @@
 import { sql } from "drizzle-orm";
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
-const $timestamp = (name) => {
-  // https://github.com/drizzle-team/drizzle-orm/blob/a7dc7e8bbdc3784f67ff32ce39bee3283f080751/examples/libsql/src/schema.ts
+const $timestamp = (name: string) => {
   return integer(name, { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`);
 };
 
@@ -15,5 +14,5 @@ export const threads = sqliteTable('threads', {
   updatedAt: $timestamp('updated_at').notNull(),
 });
 
-// [Feature] update updated_at in sqlite
-// https://github.com/drizzle-team/drizzle-orm/issues/843
+export type Thread = typeof threads.$inferSelect;
+export type NewThread = typeof threads.$inferInsert;

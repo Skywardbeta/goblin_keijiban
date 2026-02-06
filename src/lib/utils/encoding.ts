@@ -5,7 +5,6 @@ export const utf8 = (v: Buffer | Uint8Array): string => iconv.decode(Buffer.from
 
 const percent2bytes = (encoded: string): Uint8Array => {
   const data: number[] = [];
-  // Convert + to space (0x20) as per form URL encoding standard
   const normalized = encoded.replace(/\+/g, ' ');
 
   for (let i = 0; i < normalized.length; i++) {
@@ -28,7 +27,6 @@ export const sjis2utf8 = (body: ArrayBuffer | Uint8Array): string => {
   const str = new TextDecoder().decode(body);
 
   try {
-    // For UTF-8 encoded forms: + becomes space, %2B becomes +
     const normalized = str.replace(/\+/g, ' ');
     return decodeURIComponent(normalized);
   } catch {
