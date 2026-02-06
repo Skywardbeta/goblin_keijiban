@@ -1,0 +1,38 @@
+{
+  "name": "mychan",
+  "version": "0.2.0",
+  "description": "Lightweight 2channel clone.",
+  "private": true,
+  "type": "module",
+  "author": "Shinosaki",
+  "license": "MIT",
+  "scripts": {
+    "start": "bun run src/bun.js",
+    "dev": "bun run --hot src/bun.js",
+    "dev:cf": "wrangler dev --live-reload src/worker.js",
+    "build": "bun build src/bun.js --compile --minify --outfile dist/mychan",
+    "production": "NODE_ENV=production bun run src/bun.js",
+    "deploy": "wrangler deploy --minify src/worker.js",
+    "deploy:migration": "wrangler d1 migrations apply mychan-db",
+    "secret:uid": "openssl rand -hex 12 | tr -d '\n' | wrangler secret put UID_SECRET",
+    "db:init": "wrangler d1 create mychan-db",
+    "db:generate": "drizzle-kit generate:sqlite --schema=db/schema.js",
+    "db:migration": "wrangler d1 migrations apply --local mychan-db",
+    "db:setup": "bun run db:init:local",
+    "db:init:local": "sqlite3 database.sqlite < drizzle/0000_init.sql || echo 'Run db:generate first if migration file missing'"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.1.8",
+    "drizzle-orm": "^0.28.6",
+    "hono": "^3.7.2",
+    "iconv-lite": "https://github.com/shinosaki/iconv-lite",
+    "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230914.0",
+    "@types/node": "^25.2.1",
+    "bun-types": "^1.3.8",
+    "drizzle-kit": "^0.19.13",
+    "wrangler": ">=3.8.0 <3.9.0 || >=3.9.1"
+  }
+}
